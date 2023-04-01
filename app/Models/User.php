@@ -16,10 +16,10 @@ class User extends Authenticatable
 
     protected $hidden = ['mdp'];
 
-    protected $fillable = ['nom','prenom','login', 'mdp', 'type'];
+    protected $fillable = ['nom','prenom','login', 'mdp','formation_id', 'type'];
 
     protected $attributes = [
-        'type' => 'user'
+        'type' => null
     ];
 
 

@@ -25,3 +25,10 @@ Route::view('/home','home');
 Route::get('/register', [RegisterController::class,'formRegister'])
     ->name('register');
 Route::post('/register', [RegisterController::class,'register']);
+
+Route::get('/login', [AuthenticatedSessionController::class,'showForm'])
+    ->name('login');
+Route::post('/login', [AuthenticatedSessionController::class,'login']);
+
+Route::get('/logout', [AuthenticatedSessionController::class,'logout'])
+    ->name('logout')->middleware('auth');

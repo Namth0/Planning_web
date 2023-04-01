@@ -42,10 +42,15 @@
             <legend class="fs-5">Login</legend>
             <input class="form-control" type="text" name="login" value="{{old('login')}}">
         </div>
+        {{-- <div>
+            <legend class="fs-5">formation_id</legend>
+            <input class="form-control" type="number" name="formation_id">
+        </div> --}}
         <div>
             <legend class="fs-5">MDP</legend>
             <input class="form-control" type="password" name="mdp">
         </div>
+        
         <div>
             <legend class="fs-5">Confirmation MDP</legend>
             <input class="form-control" type="password" name="mdp_confirmation">

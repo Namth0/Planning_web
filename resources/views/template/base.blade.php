@@ -52,14 +52,14 @@
 
         header > h1 > a
         {
-            color: inherit;
+            color: dark;
             text-decoration: none;
         }
 
         header > a
         {
             text-decoration: none;
-            color: aliceblue !important;
+            color: dark !important;
             position: relative;
         }
 
@@ -88,6 +88,10 @@
             margin-inline: auto;
         }
 
+        header {
+         background-color: #080871;
+        }
+
 
         .bubble
         {
@@ -98,25 +102,17 @@
             height: auto;
             padding: 1rem;
         }
-
-        img
-        {
-            max-height: 250px !important;
-            max-width: 250px !important;
-        }
-
-
         
     </style>
 
 </head>
     <body>
         
-        <header class="bg-dark text-light">
+        <header>
             <h1><a href="/home">Planning</a></h1>
 
             @guest()
-                {{-- <a href="/login">Se connecter</a> --}}
+                <a href="/login">Se connecter</a>
                 <a href="/register">S'inscrire</a>
             @endguest
 
@@ -127,7 +123,8 @@
                 @if(Auth::user()->type == "enseignant")
                     
                 @endif
-                @if(Auth::user()->type == "user")
+                @if(Auth::user()->type == "admin")
+                <a href="/">Configuration</a>
                    
 
                 @endif
