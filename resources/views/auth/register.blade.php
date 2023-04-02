@@ -41,11 +41,15 @@
         <div>
             <legend class="fs-5">Login</legend>
             <input class="form-control" type="text" name="login" value="{{old('login')}}">
+        </div> 
+        <div>
+         <legend class="fs-5">Choix de la formation</legend>
+       <select name="formation" id="formation">
+            @foreach($formations as $formation)
+            <option value="{{$formation->id}}">{{$formation->intitule}}</option>
+        @endforeach
+        </select>
         </div>
-        {{-- <div>
-            <legend class="fs-5">formation_id</legend>
-            <input class="form-control" type="number" name="formation_id">
-        </div> --}}
         <div>
             <legend class="fs-5">MDP</legend>
             <input class="form-control" type="password" name="mdp">

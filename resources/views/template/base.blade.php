@@ -125,6 +125,7 @@
                 @endif
                 @if(Auth::user()->type == "admin")
                 <a href="/">Configuration</a>
+                <a href="/add">Ajouter une formation</a>
                    
 
                 @endif

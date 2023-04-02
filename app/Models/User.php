@@ -27,7 +27,7 @@ class User extends Authenticatable
         return $this->mdp;
     }
 
-    public function isAdmin(){
+    public function IsAdmin(){
          return $this->type == 'admin';
     }
 

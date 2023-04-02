@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Formations;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,8 @@ class RegisterController extends Controller
 {
     //
     public function formRegister(){
-        return view('auth.register');
+        $formations = Formations::all();
+        return view('auth.register',["formations"=>$formations]);
         }
 
         
@@ -24,7 +26,6 @@ class RegisterController extends Controller
         'nom' => 'required|string|max:50',
         'login' => 'required|string|max:30|unique:users',
         'mdp' => 'required|string|confirmed',
-        'formation_id' =>'bail|required|integer|gte:0|lte:120'
         ]);
 
         $user = new User();
@@ -32,7 +33,6 @@ class RegisterController extends Controller
         $user->nom = $request->nom;
         $user->login = $request->login;
         $user->mdp = Hash::make($request->mdp);
-        $user->formation_id = $request->formation_id;
         $user->save();
 
         session()->flash('etat','formulaire rempli attente de verification !');

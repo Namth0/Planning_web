@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\FormationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +18,15 @@ use App\Http\Controllers\RegisterController;
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 
 Route::view('/home','home');
 
-
+/*
+|--------------------------------------------------------------------------
+| Accueil
+|--------------------------------------------------------------------------
+*/
 Route::get('/register', [RegisterController::class,'formRegister'])
     ->name('register');
 Route::post('/register', [RegisterController::class,'register']);
@@ -32,3 +37,14 @@ Route::post('/login', [AuthenticatedSessionController::class,'login']);
 
 Route::get('/logout', [AuthenticatedSessionController::class,'logout'])
     ->name('logout')->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
+| Admin
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::post('/add', [FormationController::class, 'createFormations']);
+    Route::get('/add', [FormationController::class, 'addFormationsForm'])->name('add');
+});
+
