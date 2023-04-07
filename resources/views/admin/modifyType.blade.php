@@ -6,10 +6,19 @@
         @csrf
         <h1>Modifier le type</h1>
 
-        <label for="type">type</label>
-        <input type="text" placeholder="type" name="type" id="type" value="{{ $users->type }}" autofocus>
+    <label for="type">Type</label>
+    <select name="type" id="type">
         
-        <button type="submit">Envoyer</button>
+        @if ($users->formation_id == null)
+            <option value="enseignant" {{ $users->type == "enseignant" ? "selected" : "" }}>Enseignant</option>
+            <option value="admin" {{ $users->type == "admin" ? "selected" : "" }}>Admin</option>
+        @else 
+            <option value="etudiant" {{ $users->type == "etudiant" ? "selected" : "" }}>Etudiant</option>
+
+        @endif
+    </select>
+
+    <button type="submit">Envoyer</button>
 
     </form>
 @endsection

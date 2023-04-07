@@ -23,7 +23,7 @@ class FormationController extends Controller
     public function createFormations(Request $request )
     {
         $validated = $request->validate([
-                'intitule'=> 'required|alpha_spaces|max:50',
+                'intitule'=> 'nullable|alpha_spaces|max:50',
         ]);
 
         if (DB::table("formations")->where("intitule", "LIKE", $validated ["intitule"])->first() != null){
@@ -48,27 +48,32 @@ class FormationController extends Controller
         return view('admin.gestionUtilisateur', ['users' => $usr]);
     }
 
-    //fonction qui modifie le type d'un utilisateur ( etudiant ou enseignant )
     public function modifyType(Request $request, $id){
-        //change le statut du type 
         $user = Auth::user();
-        if( $user->type == "etudiant"|| $user->type == "enseignant" ) {
+        if ($user->type == "etudiant" || $user->type == "enseignant") {
             return redirect ("/");
         }
         $target = User::find($id);
-    if ($target == null) {
-        $request->session()->flash("error", 'Impossible de cibler l id ');
-        return redirect("/gestion");
+        if ($target == null) {
+            $request->session()->flash("error", 'Impossible de cibler l id ');
+            return redirect("/gestion");
+        }
+        $formation_id = $target->formation_id;
+        if ($formation_id == null) {
+            $request->validate([
+                'type' => 'required|in:admin,enseignant'
+            ]);
+        } else {
+            $request->validate([
+                'type' => 'required|in:etudiant'
+            ]);
+        }
+        $target->type = $request->type;
+        $target->save();
+        $request->session()->flash("etat", "Modification effectuée.");
+        return redirect("/home");
     }
-    $request->validate([
-        'type' => 'required|in:etudiant,enseignant'
-    ]);
-    $target->type = $request->type;
-    $target->save();
-    $request->session()->flash("etat", "Modification effectuée.");
-    return redirect("/home");
-
-    }
+    
 
     // Affiche le formulaire de changement de type
     public function TypeForm(Request $request, $id){

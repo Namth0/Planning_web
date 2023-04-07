@@ -118,9 +118,11 @@
 
             @auth
                 @if(Auth::user()->type == "etudiant")
+                <a href="/accountEtu">Mon compte</a>
                   
                 @endif
                 @if(Auth::user()->type == "enseignant")
+                <a href="/accountProf">Mon compte</a>
                     
                 @endif
                 @if(Auth::user()->type == "admin")

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\FormationController;
+use App\Http\Controllers\ActionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,4 +51,26 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/type/{id}', [FormationController::class, 'TypeForm'])->name('type');
     Route::post('/type/{id}', [FormationController::class,'modifyType']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Etudiant
+|--------------------------------------------------------------------------
+*/
+Route::get('/accountEtu',[ActionController::class,'PasswordFormEtu'])->name('accountEtu');
+Route::post('/accountEtu',[ActionController::class,'UpdatePasswordEtu']);
+Route::get('/modify-nom-prenom-etu',[ActionController::class,'nameFormEtu'])->name('modify-nom-prenom-etu');
+Route::post('/modify-nom-prenom-etu',[ActionController::class,'modifyNameEtu']);
+
+
+/*
+|--------------------------------------------------------------------------
+| Enseignant
+|--------------------------------------------------------------------------
+*/
+Route::get('/accountProf',[ActionController::class,'PasswordFormProf'])->name('accountProf');
+Route::post('/accountProf',[ActionController::class,'UpdatePasswordProf']);
+Route::get('/modify-nom-prenom',[ActionController::class,'nameFormProf'])->name('modify-nom-prenom');
+Route::post('/modify-nom-prenom',[ActionController::class,'modifyNameProf']);
+
 

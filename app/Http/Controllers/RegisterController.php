@@ -25,7 +25,7 @@ class RegisterController extends Controller
         'prenom' => 'required|string|max:50',
         'nom' => 'required|string|max:50',
         'login' => 'required|string|max:30|unique:users',
-        'formation'=>'required|integer|',
+        'formation'=>'nullable|integer',
         'mdp' => 'required|string|confirmed',
         ]);
 
@@ -39,9 +39,7 @@ class RegisterController extends Controller
         $user->save();
 
         session()->flash('etat','formulaire rempli attente de verification !');
-
-        Auth::login($user);
-        return redirect()->back();
+        return redirect("/home");
         }
         
 }
