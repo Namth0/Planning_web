@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Formations;
+use App\Models\Cours;
 use App\Providers\RouteServiceProvider;
 use App\Providers\AppServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -39,6 +40,43 @@ class FormationController extends Controller
         $request->session()->flash('etat', 'Formation créer !');
         return redirect()->route('home');
     }
+
+    //fonction qui ajoute des cours a la bdd
+    public function createCourses(Request $request)
+    {
+        $validated = $request->validate([
+            'intitule'=> 'alpha_spaces|max:50',
+            'formation'=>'nullable|integer',
+            'user'=>'nullable|integer',
+        ]);
+
+        if (DB::table("cours")->where("intitule", "LIKE", $validated ["intitule"])->first() != null){
+            // La formation existe deja
+        $request->session()->flash('error', 'Impossible le cours existe deja !');
+        return redirect()->route('addCours');
+        }
+
+        $cours = new Cours();
+        $cours->intitule = $validated['intitule'];
+        $cours->formation_id = $validated['formation'];
+        $cours->user_id = $validated['user'];
+
+        $cours->save();
+
+        $request->session()->flash('etat', 'Cours créer !');
+        return redirect()->route('home');
+    }
+
+    // affiche la vue d'ajout de cours
+    public function addCoursForm(){
+        $formations = Formations::all();
+        $user = new User;
+        $enseignants = $user->enseignants();
+        return view('admin.addCours', ["formations" => $formations, "enseignants" => $enseignants]);
+    }
+
+    
+
     // retourne la vue de configuration
     public function indexConfig()
     {

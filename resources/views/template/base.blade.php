@@ -128,8 +128,7 @@
                 @if(Auth::user()->type == "admin")
                 <a href="/config">Configuration</a>
                 <a href="/add">Ajouter une formation</a>
-                   
-
+                <a href="/addCours">Ajouter un cours</a>
                 @endif
                 <a href="/logout">Déconnexion</a>
             @endauth
