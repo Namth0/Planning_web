@@ -8,6 +8,7 @@ use App\Models\Formations;
 use App\Models\Cours;
 use App\Providers\RouteServiceProvider;
 use App\Providers\AppServiceProvider;
+
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -123,4 +124,20 @@ class FormationController extends Controller
     }
     return view("admin.modifyType", ["users" => $target]);
     }
+
+    //Affiche la vue de tout les cours pour un admin
+    public function CoursForm()
+    {
+        $cours = Cours::simplePaginate(10);
+        return view("admin.coursAdmin", ["cours" => $cours]);
+    }
+    
+    //Affiche la vue de tout les foramtions pour un admin
+    public function FormationsForm(){
+        $formations = Formations::simplePaginate(10);
+        return view("admin.FormationsAdmin",["formations"=>$formations]);
+    }
+
+
+
 }

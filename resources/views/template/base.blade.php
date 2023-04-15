@@ -129,6 +129,8 @@
                 <a href="/config">Configuration</a>
                 <a href="/add">Ajouter une formation</a>
                 <a href="/addCours">Ajouter un cours</a>
+                <a href="/cours">Cours</a>
+                <a href="/formations">Formations</a>
                 @endif
                 <a href="/logout">Déconnexion</a>
             @endauth

@@ -48,6 +48,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/add', [FormationController::class, 'createFormations']);
     Route::get('/add', [FormationController::class, 'addFormationsForm'])->name('add');
     Route::get('/config', [FormationController::class, 'indexConfig'])->name('index')->name('config');
+    Route::get('/cours', [FormationController::class, 'CoursForm'])->name('cours');
+    Route::get('/formations',[FormationController::class,'FormationsForm'])->name('formations');
     Route::get('/type/{id}', [FormationController::class, 'TypeForm'])->name('type');
     Route::post('/type/{id}', [FormationController::class,'modifyType']);
     Route::post('/addCours',[FormationController::class,'createCourses']);
