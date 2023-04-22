@@ -138,4 +138,29 @@ class FormationController extends Controller
         return view("admin.FormationsAdmin",["formations"=>$formations]);
     }
 
+    //Affiche la vue des cours d'un étudiant
+    public function listeCoursFormation()
+    {
+        $user = Auth::user();
+
+        // Récupérer la formation de l'étudiant
+        $formation = Formations::find($user->formation_id);
+        
+        // Vérifier que l'utilisateur est inscrit à une formation
+        if ($user->formation_id) {
+            // Récupérer la liste des cours de la formation
+            $cours = Cours::where('formation_id', $user->formation_id)->get();
+    
+            // Renvoyer la vue avec la liste des cours
+            return view('etudiant.coursEtu', ["cours" => $cours,"formation" => $formation]);
+        } else {
+            // Renvoyer un message d'erreur si l'utilisateur n'est pas inscrit à une formation
+            return back()->with('error', 'Vous n\'êtes pas inscrit à une formation.');
+        }
+    }
+    
+    
+
+
+
 }

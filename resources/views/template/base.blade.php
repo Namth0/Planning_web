@@ -124,6 +124,7 @@
             @auth
                 @if(Auth::user()->type == "etudiant")
                 <a href="/accountEtu">Mon compte</a>
+                <a href="/formations">Cours de la formation</a>
                   
                 @endif
                 @if(Auth::user()->type == "enseignant")

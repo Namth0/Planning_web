@@ -22,10 +22,11 @@ class Cours extends Model
         return $this->belongsTo(Formation::class, 'formation_id');
     }
 
-    public function enseignant()
+    public function enseignants()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsToMany(User::class, 'cours_users', 'cours_id', 'user_id');
     }
+    
 
     public function etudiants()
     {
@@ -34,8 +35,9 @@ class Cours extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'cours_users');
+        return $this->belongsToMany(User::class, 'cours_users', 'cours_id', 'user_id');
     }
+    
 
     
 

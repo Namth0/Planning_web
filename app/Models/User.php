@@ -32,9 +32,12 @@ class User extends Authenticatable
          return $this->type == 'admin';
     }
     
-    function cours(){
-        return $this->belongsToMany(Cours::class);
+    public function cours()
+    {
+        return $this->belongsToMany(Cours::class, 'cours_users', 'user_id', 'cours_id');
     }
+    
+
 
      function enseignants()
 {

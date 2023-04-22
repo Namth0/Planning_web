@@ -67,6 +67,8 @@ Route::get('/accountEtu',[ActionController::class,'PasswordFormEtu'])->name('acc
 Route::post('/accountEtu',[ActionController::class,'UpdatePasswordEtu']);
 Route::get('/modify-nom-prenom-etu',[ActionController::class,'nameFormEtu'])->name('modify-nom-prenom-etu');
 Route::post('/modify-nom-prenom-etu',[ActionController::class,'modifyNameEtu']);
+Route::get('/formations', [FormationController::class, 'listeCoursFormation'])->name('formations');
+
 
 
 /*
