@@ -54,6 +54,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/type/{id}', [FormationController::class,'modifyType']);
     Route::post('/addCours',[FormationController::class,'createCourses']);
     Route::get('/addCours',[FormationController::class,'addCoursForm'])->name('addCours');
+    Route::post('/associer',[ActionController::class,'associerProf']);
+    Route::get('/associer',[ActionController::class,'AssocierForm'])->name("associer");
 });
 
 /*

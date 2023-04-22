@@ -86,10 +86,15 @@
             min-height: calc(100vh - 75px);
             width: min(90%, 1000px);
             margin-inline: auto;
+            background-color: #0D6EFD;
         }
 
         header {
          background-color: #080871;
+        }
+
+        body{
+            background-color: #0D6EFD;
         }
 
 

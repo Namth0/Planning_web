@@ -8,7 +8,7 @@ use App\Models\Formations;
 use App\Models\Cours;
 use App\Providers\RouteServiceProvider;
 use App\Providers\AppServiceProvider;
-
+use App\Models\cours_users;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -137,7 +137,5 @@ class FormationController extends Controller
         $formations = Formations::simplePaginate(10);
         return view("admin.FormationsAdmin",["formations"=>$formations]);
     }
-
-
 
 }
