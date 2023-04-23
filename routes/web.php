@@ -49,13 +49,18 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/add', [FormationController::class, 'addFormationsForm'])->name('add');
     Route::get('/config', [FormationController::class, 'indexConfig'])->name('index')->name('config');
     Route::get('/cours', [FormationController::class, 'CoursForm'])->name('cours');
-    Route::get('/formations',[FormationController::class,'FormationsForm'])->name('formations');
+    Route::get('/formation',[FormationController::class,'FormationsForm'])->name('formation');
     Route::get('/type/{id}', [FormationController::class, 'TypeForm'])->name('type');
     Route::post('/type/{id}', [FormationController::class,'modifyType']);
     Route::post('/addCours',[FormationController::class,'createCourses']);
     Route::get('/addCours',[FormationController::class,'addCoursForm'])->name('addCours');
     Route::post('/associer',[ActionController::class,'associerProf']);
     Route::get('/associer',[ActionController::class,'AssocierForm'])->name("associer");
+    Route::get('/modifyFormation/{id}', [ActionController::class, 'modifyFormationsForm'])->name('modifyFormation');
+    Route::post('/modifyFormation/{id}', [ActionController::class,'modifyFormations']);
+    Route::get('/deleteFormation/{id}', [ActionController::class, 'suppForm'])->name('deleteFormation');
+    Route::post('/deleteFormation/{id}', [ActionController::class,'deleteFormation']);
+
 });
 
 /*

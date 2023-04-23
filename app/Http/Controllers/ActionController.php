@@ -90,14 +90,17 @@ public function modifyNameProf(Request $request){
     return redirect()->route('home');
 }
 
+//redirige vers la vue  pour modifier le nom d'un prof
 public function nameFormProf(){
     return view ("enseignant.modifyNameProf");
 }
 
+//redirife vers la vue pour modifier le nom et prenom etc d'un etudiant
 public function nameFormEtu(){
     return view ("etudiant.modifyNameEtu");
 }
 
+//fonction pour modifier le nom et prenom etc d'un etudiant
 public function modifyNameEtu(Request $request){
     $user = Auth::user();
     $currentName = $request->input('Name');
@@ -105,18 +108,16 @@ public function modifyNameEtu(Request $request){
     $newName = $request->input('newName');
     $newLastName = $request->input('newLastName');
 
-    // Vérifier si les champs sont vides
+    
     if(empty($newName) || empty($newLastName)){
         session()->flash('error', 'Le prenom et le nom sont requis');
         return redirect()->route('modify-nom-prenom-etu');
     }
 
-    // Mettre à jour le nom et le prenom de l'utilisateur dans la base de données
     $user->prenom = $newName;
     $user->nom = $newLastName;
     $user->save();
 
-    // Rediriger l'utilisateur vers la page de profil mise à jour
     session()->flash('etat', 'Votre nom/prenom a été modifié avec succès !');
     return redirect()->route('home');
 }
@@ -168,6 +169,59 @@ public function AssocierForm()
 
     // Afficher la vue en envoyant les données des cours et des profs
     return view('admin.addProfToCours', ['cours' => $cours, 'profs' => $profs]);
+}
+
+// modifier l'intitulé d'une formation
+public function modifyFormations(Request $request,$id){
+
+    $validated = $request->validate([
+        'intitule'=> 'nullable|alpha_spaces|max:50',
+]);
+    $formation = Formations::find($id);
+
+    if($formation === null){
+        $request->session()->flash('error','Impossible de modifier la formation car inexistante');
+        return redirect()->route('/');
+    }
+
+    $formation->intitule = $validated["intitule"];
+    $formation->save();
+
+    $request->session()->flash('etat','Formation modifié avec succes !');
+    return redirect()->route('home');
+}
+
+public function modifyFormationsForm(Request $request,$id){
+    $formation = Formations::find($id);
+
+    if($formation === null){
+        $request->session()->flash('error','Impossbilde de modifier la formation car inexistante');
+        return redirect()->route('formation');
+    }
+
+    return view('admin.modifyFormationAdmin',["formation"=>$formation]);
+}
+
+//fonction qui suprrime une formation en utilisant le softdeletes
+public function deleteFormation(Request $request, $id) {
+
+    $formation = Formations::find($id);
+
+    if ($formation === null) {
+        $request->session()->flash('error', 'Oops, Une erreur est survenue.');
+        return redirect()->route('formation');
+    }
+    
+    $formation->delete();
+    $request->session()->flash('etat', 'Formation supprimé.');
+    return redirect()->route('home');
+}
+
+// Affiche la vue de suppression d'une personne
+
+public function suppForm($id){
+    $formation = Formations::find($id);
+    return view('admin.deleteFormation') -> with('formation',$formation);
 }
 
 }
