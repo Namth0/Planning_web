@@ -73,6 +73,12 @@ Route::post('/accountEtu',[ActionController::class,'UpdatePasswordEtu']);
 Route::get('/modify-nom-prenom-etu',[ActionController::class,'nameFormEtu'])->name('modify-nom-prenom-etu');
 Route::post('/modify-nom-prenom-etu',[ActionController::class,'modifyNameEtu']);
 Route::get('/formations', [FormationController::class, 'listeCoursFormation'])->name('formations');
+Route::post('/InscriptionEtu/{id}/',[ActionController::class,'inscriptionCours'])->name('InscripitonEtu');
+Route::get('/InscriptionEtu/{id}/', [ActionController::class, 'inscriptionCoursform'])->name('InscriptionEtu');
+Route::post('/DesinscriptionEtu/{id}/',[ActionController::class,'desinscriptionCours'])->name('DesinscriptionEtu');
+Route::get('/DesinscriptionEtu/{id}/', [ActionController::class, 'desinscriptionCoursform'])->name('DesinscriptionEtu');
+Route::get('/courses',[ActionController::class,'listeCoursInscrits'])->name('courses');
+
 
 
 

@@ -218,10 +218,100 @@ public function deleteFormation(Request $request, $id) {
 }
 
 // Affiche la vue de suppression d'une personne
-
 public function suppForm($id){
     $formation = Formations::find($id);
     return view('admin.deleteFormation') -> with('formation',$formation);
 }
+
+//fonction pour qu'un etudiant s'inscrit a un cours 
+public function inscriptionCours(Request $request,$id)
+{
+    // Récupérer l'utilisateur connecté
+    $user = Auth::user();
+
+    // Vérifier que l'utilisateur est un étudiant
+    if ($user->type == 'etudiant') {
+        // Récupérer le cours correspondant à l'id donné en paramètre
+        $cours = Cours::find($id);
+
+        // Vérifier que le cours existe
+        if ($cours) {
+            // Vérifier que l'utilisateur n'est pas déjà inscrit à ce cours
+            if (!$user->cours->contains($cours)) {
+                // Ajouter le cours à la liste des cours de l'utilisateur
+                $user->cours()->attach($cours->id);
+
+                // Renvoyer un message de succès
+                $request->session()->flash('etat', 'Vous êtes maintenant inscrit à ce cours.');
+                return redirect()->route('home');
+            } else {
+                // Renvoyer un message d'erreur si l'utilisateur est déjà inscrit à ce cours
+                $request->session()->flash('error', 'Vous êtes déjà inscrit à ce cours.');
+                return redirect()->route('formations');
+            }
+        } else {
+            // Renvoyer un message d'erreur si le cours n'existe pas
+            $request->session()->flash('error', 'Ce cours n\'existe pas.');
+            return redirect()->route('home');
+        }
+    } else {
+        // Renvoyer un message d'erreur si l'utilisateur n'est pas un étudiant
+        $request->session()->flash('error', 'Vous devez être un étudiant pour vous inscrire à un cours.');
+        return redirect()->route('home');
+    }
+}
+
+//retourne la vue pour s'inscrire a un cours
+public function inscriptionCoursform($id)
+{
+  $cours = Cours::find($id);
+  return view('etudiant.InscriptionEtu',["cours"=>$cours]) ;
+}
+
+//fonction pour qu'un etudiant de desinscris a un cours
+public function desinscriptionCours(Request $request, $id) {
+    $user = Auth::user(); // Récupération de l'utilisateur connecté
+    $cours = Cours::find($id); // Récupération du cours correspondant à l'id
+    $type = $user->type; // Récupération du type de l'utilisateur connecté (étudiant, enseignant ou admin)
+    
+    // Vérification si l'utilisateur est bien inscrit au cours
+    if(!$cours->etudiants->contains($user)) {
+        $request->session()->flash('error', 'Vous n\'êtes pas inscrit à ce cours.');
+        return redirect()->route('formations');
+    }
+  
+    // Suppression de la relation entre le cours et l'utilisateur
+    $cours->etudiants()->detach($user);
+    $request->session()->flash('etat', 'Vous avez été désinscrit du cours "' . $cours->intitule . '".');
+    return redirect()->route('home');
+}
+
+
+  //retourne la vue pour s'inscrire a un cours
+public function desinscriptionCoursform($id)
+{
+  $cours = Cours::find($id);
+  return view('etudiant.DesinscriptionEtu',["cours"=>$cours]) ;
+}
+
+//liste des cours  d'un etudiant ausquel il est inscrit
+public function listeCoursInscrits()
+{
+    $user = Auth::user();
+    $coursInscrits = $user->cours;
+    return view('etudiant.ListeCoursInscritEtu', ["coursInscrits" => $coursInscrits]);
+}
+
+public function rechercherCours($formation_id) {
+   //TODO
+  }
+  
+
+
+
+
+  
+
+
 
 }
