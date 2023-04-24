@@ -16,5 +16,10 @@ class Formations extends Model
 
     protected $fillable = ['intitule'];
     protected $hidden = ['created_at', 'updated_at'];
+
+    public function cours()
+    {
+        return $this->hasMany(Cours::class);
+    }
     
 }

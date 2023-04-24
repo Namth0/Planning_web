@@ -78,6 +78,7 @@ Route::get('/InscriptionEtu/{id}/', [ActionController::class, 'inscriptionCoursf
 Route::post('/DesinscriptionEtu/{id}/',[ActionController::class,'desinscriptionCours'])->name('DesinscriptionEtu');
 Route::get('/DesinscriptionEtu/{id}/', [ActionController::class, 'desinscriptionCoursform'])->name('DesinscriptionEtu');
 Route::get('/courses',[ActionController::class,'listeCoursInscrits'])->name('courses');
+Route::post('/formations/{formation_id}', [ActionController::class, 'rechercherCoursFiltrer'])->name('formations');
 
 
 
@@ -91,5 +92,5 @@ Route::get('/accountProf',[ActionController::class,'PasswordFormProf'])->name('a
 Route::post('/accountProf',[ActionController::class,'UpdatePasswordProf']);
 Route::get('/modify-nom-prenom',[ActionController::class,'nameFormProf'])->name('modify-nom-prenom');
 Route::post('/modify-nom-prenom',[ActionController::class,'modifyNameProf']);
-
+Route::get('/responsable',[ActionController::class,'listeCoursResponsable'])->name('responsable');
 

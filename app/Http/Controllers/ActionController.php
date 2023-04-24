@@ -302,9 +302,34 @@ public function listeCoursInscrits()
     return view('etudiant.ListeCoursInscritEtu', ["coursInscrits" => $coursInscrits]);
 }
 
-public function rechercherCours($formation_id) {
-   //TODO
+
+  public function rechercherCoursFiltrer(Request $request ,$formation_id) {
+
+    $validated = $request->validate([
+        'recherche'=> 'nullable|alpha_spaces|max:50',
+]);
+
+    $formation = Formations::find($formation_id);
+    $cours = Cours::where("formation_id", $formation->id)->where("intitule", "like", $validated["recherche"])->get();
+
+ 
+        // Si aucun paramètre de recherche n'est passé, afficher tous les cours de la formation
+
+    return view('etudiant.coursEtu', ['formation' => $formation, 'cours' => $cours]);
   }
+
+
+  public function listeCoursResponsable()
+{
+    $cours = Cours::whereHas("enseignants", function($query) {
+        $query->where("users.id", "=", Auth::user()->id);
+    })->get();
+
+    return view('enseignant.listeCoursResponsable', ['cours' => $cours]);
+}
+
+
+  
   
 
 
