@@ -131,6 +131,7 @@
                 @if(Auth::user()->type == "enseignant")
                 <a href="/accountProf">Mon compte</a>
                 <a href = "/responsable">Mes cours</a>
+
                     
                 @endif
                 @if(Auth::user()->type == "admin")

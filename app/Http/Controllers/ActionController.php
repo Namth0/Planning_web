@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Cours;
 use App\Models\Formations;
+use App\Models\Plannings;
 use App\Models\cours_users;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -328,14 +329,110 @@ public function listeCoursInscrits()
     return view('enseignant.listeCoursResponsable', ['cours' => $cours]);
 }
 
+public function creerSeanceCours(Request $request, $cours_id)
+{
+    // Validation des données de la requête
+    $validated = $request->validate([
+        'date_debut' => 'required|date',
+        'date_fin' => 'required|date|after:date_debut',
+    ]);
 
-  
-  
+    // Recherche du cours associé à l'ID fourni
+    $cours = Cours::find($cours_id);
+
+    // Création d'une nouvelle séance de cours pour ce cours
+    $seance = new Plannings();
+    $seance->cours_id = $cours->id;
+    $seance->date_debut = $validated['date_debut'];
+    $seance->date_fin = $validated['date_fin'];
+    $seance->save();
+    $request->session()->flash('etat','Nouvelle seance creer !');
+    // Redirection vers la page du cours avec un message de confirmation
+    return redirect()->route('home');
+}
+
+public function creerSeanceForm($cours_id)
+{
+    // Recherche du cours associé à l'ID fourni
+    $cours = Cours::find($cours_id);
+
+    // Renvoyer la vue de création d'une nouvelle séance de cours pour ce cours
+    return view('enseignant.AddSeanceProf', ['cours' => $cours]);
+}
+
+public function modifierSeanceCours(Request $request, $seance_id)
+{
+    // Recherche de la séance de cours associée à l'ID fourni
+    $seance = Plannings::find($seance_id);
+
+    // Vérification que la séance existe
+    if (!$seance) {
+        $request->session()->flash('error','La séance n\'existe pas !');
+        return redirect()->back();
+    }
+
+    // Validation des données de la requête
+    $validated = $request->validate([
+        'date_debut' => 'required|date',
+        'date_fin' => 'required|date|after:date_debut',
+    ]);
+
+    // Mise à jour des informations de la séance de cours
+    $seance->date_debut = $validated['date_debut'];
+    $seance->date_fin = $validated['date_fin'];
+    $seance->save();
+    $request->session()->flash('etat','La séance a été modifiée !');
+
+    // Redirection vers la page du cours avec un message de confirmation
+    return redirect()->route('home');
+}
 
 
+public function editerSeanceForm($seance_id)
+{
+    // Récupération de la séance de cours associée à l'ID fourni
+    $seance = Plannings::find($seance_id);
 
+    // Vérification que la séance existe
+    if (!$seance) {
+        // Séance inexistante, on redirige vers la page précédente avec un message d'erreur
+        return redirect()->back()->with('error', 'Séance inexistante !');
+    }
 
-  
+    // Envoi des données à la vue
+    return view('enseignant.ModifySeanceProf', ['seance' => $seance]);
+}
+
+// Affichage du formulaire de confirmation de suppression d'une séance de cours
+public function supprimerSeanceForm($seance_id)
+{
+    // Récupération de la séance de cours associée à l'ID fourni
+    $seance = Plannings::find($seance_id);
+
+    // Envoi des données à la vue
+    return view('enseignant.DeleteSeanceProf', ['seance' => $seance]);
+}
+
+// Suppression d'une séance de cours
+public function supprimerSeanceCours(Request $request, $seance_id)
+{
+    // Recherche de la séance de cours associée à l'ID fourni
+    $seance = Plannings::find($seance_id);
+
+    // Vérification que la séance existe
+    if (!$seance) {
+        $request->session()->flash('error','Séance inexistante !');
+        return redirect()->route('responsable');
+    }
+
+    // Suppression de la séance de cours
+    $seance->delete();
+    $request->session()->flash('etat','Séance supprimée !');
+
+    // Redirection vers la page du cours avec un message de confirmation
+    return redirect()->route('home');
+}
+
 
 
 

@@ -73,7 +73,7 @@ Route::post('/accountEtu',[ActionController::class,'UpdatePasswordEtu']);
 Route::get('/modify-nom-prenom-etu',[ActionController::class,'nameFormEtu'])->name('modify-nom-prenom-etu');
 Route::post('/modify-nom-prenom-etu',[ActionController::class,'modifyNameEtu']);
 Route::get('/formations', [FormationController::class, 'listeCoursFormation'])->name('formations');
-Route::post('/InscriptionEtu/{id}/',[ActionController::class,'inscriptionCours'])->name('InscripitonEtu');
+Route::post('/InscriptionEtu/{id}/',[ActionController::class,'inscriptionCours'])->name('InscriptionEtu');
 Route::get('/InscriptionEtu/{id}/', [ActionController::class, 'inscriptionCoursform'])->name('InscriptionEtu');
 Route::post('/DesinscriptionEtu/{id}/',[ActionController::class,'desinscriptionCours'])->name('DesinscriptionEtu');
 Route::get('/DesinscriptionEtu/{id}/', [ActionController::class, 'desinscriptionCoursform'])->name('DesinscriptionEtu');
@@ -93,4 +93,12 @@ Route::post('/accountProf',[ActionController::class,'UpdatePasswordProf']);
 Route::get('/modify-nom-prenom',[ActionController::class,'nameFormProf'])->name('modify-nom-prenom');
 Route::post('/modify-nom-prenom',[ActionController::class,'modifyNameProf']);
 Route::get('/responsable',[ActionController::class,'listeCoursResponsable'])->name('responsable');
+Route::post('/seance/{id}/',[ActionController::class,'creerSeanceCours'])->name('seance');
+Route::get('/seance/{id}/', [ActionController::class, 'creerSeanceForm'])->name('seance');
+Route::post('/modifySeance/{id}/',[ActionController::class,'modifierSeanceCours'])->name('modifySeance');
+Route::get('/modifySeance/{id}/', [ActionController::class, 'editerSeanceForm'])->name('modifySeance');
+Route::put('/modifySeance/{id}', [ActionController::class,'modifierSeanceCours'])->name('modifySeance');
+Route::get('/deleteSeance/{id}/', [ActionController::class, 'supprimerSeanceForm'])->name('modifySeance');
+Route::post('/deleteSeance/{id}', [ActionController::class,'supprimerSeanceCours'])->name('modifySeance');
+
 
