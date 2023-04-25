@@ -131,6 +131,8 @@
                 @if(Auth::user()->type == "enseignant")
                 <a href="/accountProf">Mon compte</a>
                 <a href = "/responsable">Mes cours</a>
+                <a href = "/perCours">Par Cours</a>
+                <a href = "/perSemaine">Par Semaine</a>
 
                     
                 @endif

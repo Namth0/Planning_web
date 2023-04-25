@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h1>Liste de tout les  cours dont vous êtes responsable</h1>
+<h1>les cours dont vous etes responsable par intitule</h1>
 
 <table class="table table-striped table-dark">
     <thead>

@@ -1,23 +1,25 @@
-@extends('template/base')
+@extends('template.base')
 
 @section('content')
 
-<h1>Liste de tout les  cours dont vous êtes responsable</h1>
+    <h1>Liste des cours par semaine</h1>
 
-<table class="table table-striped table-dark">
-    <thead>
-        <tr>
-            <th>Intitulé</th>
-            <th>Formation</th>
-            <th>Nombre d'étudiants/Enseignants inscrits</th>
-            <th>Creer une seance</th>
-            <th>Modifier une seance</th>
-            <th>Supprimer une seance</th>
-            <th>Date debut</th>
-            <th>Date Fin</th>
-        </tr>
-    </thead>
-    <tbody>
+    @foreach($coursParSemaine as $semaine => $cours)
+
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr>
+                    <th>Intitulé</th>
+                    <th>Formation</th>
+                    <th>Nombre d'étudiants/Enseignants inscrits</th>
+                    <th>Creer une seance</th>
+                    <th>Modifier une seance</th>
+                    <th>Supprimer une seance</th>
+                    <th>Date debut</th>
+                    <th>Date Fin</th>
+                </tr>
+            </thead>
+            <tbody>
         @foreach($cours as $c)
         <tr>
             <td>{{ $c->intitule }}</td>
@@ -46,5 +48,6 @@
         @endforeach
     </tbody>
 </table>
+@endforeach
 
 @endsection

@@ -326,8 +326,50 @@ public function listeCoursInscrits()
         $query->where("users.id", "=", Auth::user()->id);
     })->get();
 
+    // dump($cours[0]->plannings);
+
     return view('enseignant.listeCoursResponsable', ['cours' => $cours]);
 }
+
+public function listeCoursResponsableParCours()
+{
+    // Récupération des cours dont l'utilisateur connecté est responsable
+    $cours = Cours::whereHas('enseignants', function($query) {
+            $query->where('users.id', '=', Auth::user()->id);
+        })
+        ->with('plannings') // Chargement des plannings de chaque cours
+        ->orderBy('intitule')
+        ->get();
+
+    // Retourne la vue avec les cours
+    return view('enseignant.ParCours', ['cours'=> $cours]);
+}
+
+public function listeCoursParSemaine()
+{
+    // Récupérer la liste des cours dont l'utilisateur est responsable
+    $cours = Cours::whereHas('enseignants', function($query) {
+        $query->where('users.id', '=', Auth::user()->id);
+    })
+    ->with('planning')->get();
+
+    // Trier les cours par date croissante
+    $cours = $cours->sortBy(function ($cours) {
+        return optional($cours->planning)->date_debut;
+    });
+
+    // Regrouper les cours par semaine
+    $coursParSemaine = $cours->groupBy(function ($cours) {
+        return optional($cours->planning)->semaine;
+    });
+
+    // Retourner la vue avec les données des cours par semaine
+    return view('enseignant.ParSemaine', ['coursParSemaine' => $coursParSemaine]);
+}
+
+
+
+
 
 public function creerSeanceCours(Request $request, $cours_id)
 {
@@ -408,6 +450,12 @@ public function supprimerSeanceForm($seance_id)
 {
     // Récupération de la séance de cours associée à l'ID fourni
     $seance = Plannings::find($seance_id);
+
+    // Vérification que la séance existe
+    if (!$seance) {
+        // Séance inexistante, on redirige vers la page précédente avec un message d'erreur
+        return redirect()->back()->with('error', 'Séance inexistante !');
+    }
 
     // Envoi des données à la vue
     return view('enseignant.DeleteSeanceProf', ['seance' => $seance]);

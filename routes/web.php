@@ -100,5 +100,7 @@ Route::get('/modifySeance/{id}/', [ActionController::class, 'editerSeanceForm'])
 Route::put('/modifySeance/{id}', [ActionController::class,'modifierSeanceCours'])->name('modifySeance');
 Route::get('/deleteSeance/{id}/', [ActionController::class, 'supprimerSeanceForm'])->name('modifySeance');
 Route::post('/deleteSeance/{id}', [ActionController::class,'supprimerSeanceCours'])->name('modifySeance');
+Route::get('/perCours', [ActionController::class,'listeCoursResponsableParCours'])->name('perCours');
+Route::get('/perSemaine', [ActionController::class,'listeCoursParSemaine'])->name('perSemaine');
 
 
