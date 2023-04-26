@@ -9,17 +9,16 @@
         <table class="table table-striped table-dark">
             <thead>
                 <tr>
-                    <th>Intitulé</th>
-                    <th>Formation</th>
-                    <th>Date debut</th>
+                <th>Date debut</th>
                     <th>Date Fin</th>
+                    <th>Intitulé</th>
+                    
                 </tr>
             </thead>
             <tbody>
         @foreach($cours as $c)
         <tr>
-            <td>{{ $c->intitule }}</td>
-            <td>{{ $c->formation->intitule }}</td>
+            
     @if($c->plannings->count() > 0)
                 @foreach($c->plannings as $planning)
                     <td>{{ $planning->date_debut }}</td>
@@ -29,6 +28,7 @@
                 <td>no date</td>
                 <td>no date</td>
             @endif
+            <td>{{ $c->intitule }}</td>
         </tr>
         @endforeach
     </tbody>

@@ -413,15 +413,6 @@ public function creerSeanceCours(Request $request, $cours_id)
     // Recherche du cours associé à l'ID fourni
     $cours = Cours::find($cours_id);
 
-    // Vérification si une séance de cours existe déjà pour ce cours
-    $seance_existe = Plannings::where('cours_id', $cours->id)->exists();
-
-    // Si une séance existe déjà, afficher un message d'erreur
-    if ($seance_existe) {
-        $request->session()->flash('error','Une séance existe déjà pour ce cours !');
-        return redirect()->route('home');
-    }
-
     // Création d'une nouvelle séance de cours pour ce cours
     $seance = new Plannings();
     $seance->cours_id = $cours->id;
@@ -434,6 +425,7 @@ public function creerSeanceCours(Request $request, $cours_id)
     // Redirection vers la page du cours avec un message de confirmation
     return redirect()->route('home');
 }
+
 
 
 public function creerSeanceForm($cours_id)

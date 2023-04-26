@@ -86,7 +86,7 @@
             min-height: calc(100vh - 75px);
             width: min(90%, 1000px);
             margin-inline: auto;
-            background-color: radial-gradient(white, blue);
+            background-color: radial-gradient(red, blue);
         }
 
         header {
@@ -94,7 +94,7 @@
         }
 
         body {
-    background: radial-gradient(white, blue);
+    background: radial-gradient(blue, grey);
 }
 
 
