@@ -86,16 +86,17 @@
             min-height: calc(100vh - 75px);
             width: min(90%, 1000px);
             margin-inline: auto;
-            background-color: #0D6EFD;
+            background-color: radial-gradient(white, blue);
         }
 
         header {
          background-color: #080871;
         }
 
-        body{
-            background-color: #0D6EFD;
-        }
+        body {
+    background: radial-gradient(white, blue);
+}
+
 
 
         .bubble
@@ -126,6 +127,8 @@
                 <a href="/accountEtu">Mon compte</a>
                 <a href="/formations">Cours de la formation</a>
                 <a href="/courses">Mes cours</a>
+                <a href = "/perCoursEtu">Par Cours</a>
+                <a href = "/perSemaineEtu">Par Semaine</a>
                   
                 @endif
                 @if(Auth::user()->type == "enseignant")

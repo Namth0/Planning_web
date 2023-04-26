@@ -203,7 +203,7 @@ public function modifyFormationsForm(Request $request,$id){
     return view('admin.modifyFormationAdmin',["formation"=>$formation]);
 }
 
-//fonction qui suprrime une formation en utilisant le softdeletes
+//fonction qui suprrime une formation 
 public function deleteFormation(Request $request, $id) {
 
     $formation = Formations::find($id);
@@ -248,7 +248,7 @@ public function inscriptionCours(Request $request,$id)
             } else {
                 // Renvoyer un message d'erreur si l'utilisateur est déjà inscrit à ce cours
                 $request->session()->flash('error', 'Vous êtes déjà inscrit à ce cours.');
-                return redirect()->route('formations');
+                return redirect()->route('home');
             }
         } else {
             // Renvoyer un message d'erreur si le cours n'existe pas
@@ -301,6 +301,39 @@ public function listeCoursInscrits()
     $user = Auth::user();
     $coursInscrits = $user->cours;
     return view('etudiant.ListeCoursInscritEtu', ["coursInscrits" => $coursInscrits]);
+}
+
+public function listeCoursEtudiantParCours(){
+    
+    $cours = Cours::whereHas('enseignants', function($query) {
+        $query->where('users.id', '=', Auth::user()->id);
+    })
+    ->with('plannings') // Chargement des plannings de chaque cours
+    ->orderBy('intitule')
+    ->get();
+
+// Retourne la vue avec les cours
+return view('etudiant.ParCoursEtu', ['cours'=> $cours]);
+}
+public function listeCoursParSemaineEtu()
+{
+    $cours = Cours::whereHas('enseignants', function($query) {
+        $query->where('users.id', '=', Auth::user()->id);
+    })
+    ->with('planning')->get();
+
+    // Trier les cours par date croissante
+    $cours = $cours->sortBy(function ($cours) {
+        return optional($cours->planning)->date_debut;
+    });
+
+    // Regrouper les cours par semaine
+    $coursParSemaine = $cours->groupBy(function ($cours) {
+        return optional($cours->planning)->semaine;
+    });
+
+    // Retourner la vue avec les données des cours par semaine
+    return view('etudiant.ParSemaineEtu', ['coursParSemaine' => $coursParSemaine]);
 }
 
 
@@ -369,8 +402,6 @@ public function listeCoursParSemaine()
 
 
 
-
-
 public function creerSeanceCours(Request $request, $cours_id)
 {
     // Validation des données de la requête
@@ -382,16 +413,28 @@ public function creerSeanceCours(Request $request, $cours_id)
     // Recherche du cours associé à l'ID fourni
     $cours = Cours::find($cours_id);
 
+    // Vérification si une séance de cours existe déjà pour ce cours
+    $seance_existe = Plannings::where('cours_id', $cours->id)->exists();
+
+    // Si une séance existe déjà, afficher un message d'erreur
+    if ($seance_existe) {
+        $request->session()->flash('error','Une séance existe déjà pour ce cours !');
+        return redirect()->route('home');
+    }
+
     // Création d'une nouvelle séance de cours pour ce cours
     $seance = new Plannings();
     $seance->cours_id = $cours->id;
     $seance->date_debut = $validated['date_debut'];
     $seance->date_fin = $validated['date_fin'];
     $seance->save();
-    $request->session()->flash('etat','Nouvelle seance creer !');
+
+    $request->session()->flash('etat','Nouvelle séance créée !');
+
     // Redirection vers la page du cours avec un message de confirmation
     return redirect()->route('home');
 }
+
 
 public function creerSeanceForm($cours_id)
 {
@@ -405,7 +448,8 @@ public function creerSeanceForm($cours_id)
 public function modifierSeanceCours(Request $request, $seance_id)
 {
     // Recherche de la séance de cours associée à l'ID fourni
-    $seance = Plannings::find($seance_id);
+    $seance = Plannings::where('cours_id', $seance_id)->first();
+
 
     // Vérification que la séance existe
     if (!$seance) {
@@ -424,6 +468,7 @@ public function modifierSeanceCours(Request $request, $seance_id)
     $seance->date_fin = $validated['date_fin'];
     $seance->save();
     $request->session()->flash('etat','La séance a été modifiée !');
+  
 
     // Redirection vers la page du cours avec un message de confirmation
     return redirect()->route('home');
@@ -433,7 +478,7 @@ public function modifierSeanceCours(Request $request, $seance_id)
 public function editerSeanceForm($seance_id)
 {
     // Récupération de la séance de cours associée à l'ID fourni
-    $seance = Plannings::find($seance_id);
+    $seance = Plannings::where('cours_id', $seance_id)->first();
 
     // Vérification que la séance existe
     if (!$seance) {
@@ -449,7 +494,7 @@ public function editerSeanceForm($seance_id)
 public function supprimerSeanceForm($seance_id)
 {
     // Récupération de la séance de cours associée à l'ID fourni
-    $seance = Plannings::find($seance_id);
+    $seance = Plannings::where('cours_id', $seance_id)->first();
 
     // Vérification que la séance existe
     if (!$seance) {
@@ -465,7 +510,7 @@ public function supprimerSeanceForm($seance_id)
 public function supprimerSeanceCours(Request $request, $seance_id)
 {
     // Recherche de la séance de cours associée à l'ID fourni
-    $seance = Plannings::find($seance_id);
+    $seance = Plannings::where('cours_id', $seance_id)->first();
 
     // Vérification que la séance existe
     if (!$seance) {

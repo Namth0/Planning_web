@@ -79,6 +79,8 @@ Route::post('/DesinscriptionEtu/{id}/',[ActionController::class,'desinscriptionC
 Route::get('/DesinscriptionEtu/{id}/', [ActionController::class, 'desinscriptionCoursform'])->name('DesinscriptionEtu');
 Route::get('/courses',[ActionController::class,'listeCoursInscrits'])->name('courses');
 Route::post('/formations/{formation_id}', [ActionController::class, 'rechercherCoursFiltrer'])->name('formations');
+Route::get('/perCoursEtu', [ActionController::class,'listeCoursEtudiantParCours'])->name('perCourseEtu');
+Route::get('/perSemaineEtu', [ActionController::class,'listeCoursParSemaineEtu'])->name('perSemaineEtu');
 
 
 
