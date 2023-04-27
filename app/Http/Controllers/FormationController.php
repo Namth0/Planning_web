@@ -81,7 +81,7 @@ class FormationController extends Controller
     // retourne la vue de configuration
     public function indexConfig()
     {
-        $usr = User::where('type', null)->orderBy('created_at')->get();
+        $usr = User::orderBy('created_at')->simplePaginate(10);
       
         
         return view('admin.gestionUtilisateur', ['users' => $usr]);
@@ -120,6 +120,11 @@ class FormationController extends Controller
     $target = User::find($id);
     if ($target == null) {
         $request->session()->flash("error", "Impossible de cibler l'utilisateur");
+        return redirect("/config");
+    }
+
+    if ($target->type != null) {
+        $request->session()->flash("error", "L'utilisateur a déjà un type défini.");
         return redirect("/config");
     }
     return view("admin.modifyType", ["users" => $target]);

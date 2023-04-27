@@ -67,6 +67,12 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/deleteCours/{id}', [FormationController::class, 'deleteCoursForm'])->name('deleteCours');
     Route::post('/deleteCours/{id}', [FormationController::class,'deleteCours']);
     Route::get('/ProfAndCours/',[FormationController::class,'getCoursEnseignants'])->name('ProfAndCours');
+    Route::get('/creerUser', [RegisterController::class,'formRegisterUser']) ->name('creerUser');
+    Route::post('/creerUser', [RegisterController::class,'RegisterUserAdmin']);
+    Route::get('/modifyAll/{id}', [ActionController::class, 'UpdateUserForm'])->name('modifyAll');
+    Route::post('/modifyAll/{id}', [ActionController::class,'updateUser']);
+    Route::get('/deleteUser/{id}', [ActionController::class, 'deleteUserForm'])->name('deleteUser');
+    Route::post('/deleteUser/{id}', [ActionController::class,'deleteUser']);
 
 
 });

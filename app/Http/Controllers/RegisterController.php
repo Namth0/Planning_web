@@ -41,5 +41,31 @@ class RegisterController extends Controller
         session()->flash('etat','formulaire rempli attente de verification !');
         return redirect("/home");
         }
+
+    public function RegisterUserAdmin(Request $request){
+        $request->validate([
+            'prenom' => 'required|string|max:50',
+            'nom' => 'required|string|max:50',
+            'login' => 'required|string|max:30|unique:users',
+            'formation'=>'nullable|integer',
+            'mdp' => 'required|string|confirmed',
+            ]);
+    
+            $user = new User();
+    
+            $user->prenom = $request->prenom;
+            $user->nom = $request->nom;
+            $user->login = $request->login;
+            $user->formation_id  = $request->formation;
+            $user->mdp = Hash::make($request->mdp);
+            $user->save();
+    
+            session()->flash('etat','formulaire rempli attente de verification !');
+            return redirect("/home");
+    }
+    public function formRegisterUser(){
+        $formations = Formations::all();
+        return view('admin.registerAdmin',["formations"=>$formations]);
+        }
         
 }

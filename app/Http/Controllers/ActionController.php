@@ -518,7 +518,94 @@ public function supprimerSeanceCours(Request $request, $seance_id)
     return redirect()->route('home');
 }
 
+public function updateUser(Request $request, $id)
+{
+    // Validation des données de la requête
+    $validated = $request->validate([
+        'prenom' => 'sometimes|string|max:50',
+        'nom' => 'sometimes|string|max:50',
+        'login' => 'required|string|max:30|unique:users,login,'.$id,
+        'type' => 'sometimes|in:admin,enseignant,etudiant'
+    ]);
 
+    // Recherche de l'utilisateur à modifier
+    $utilisateur = User::find($id);
+
+    if (!$utilisateur) {
+        $request->session()->flash('error', 'Utilisateur non trouvé.');
+        return redirect()->back();
+    }
+
+    // Mise à jour des données de l'utilisateur
+    if (isset($validated['prenom'])) {
+        $utilisateur->prenom = $validated['prenom'];
+    }
+
+    if (isset($validated['nom'])) {
+        $utilisateur->nom = $validated['nom'];
+    }
+
+    if (isset($validated['login'])) {
+        $utilisateur->login = $validated['login'];
+    }
+
+    if (isset($validated['type'])) {
+        $utilisateur->type = $validated['type'];
+    }
+
+    $utilisateur->save();
+
+    $request->session()->flash('etat', 'Utilisateur mis à jour avec succès.');
+
+    return redirect()->route('home');
+}
+
+
+public function UpdateUserForm(Request $request, $id){
+      
+    $target = User::find($id);
+    if ($target == null) {
+        $request->session()->flash("error", "Impossible de cibler l'utilisateur");
+        return redirect("/config");
+    }
+    return view("admin.updateUserAdmin", ["utilisateur" => $target]);
+    }
+
+
+    public function deleteUser(Request $request, $id)
+    {
+        // Recherche de l'utilisateur à supprimer
+        $utilisateur = User::find($id);
+    
+        if (!$utilisateur) {
+            $request->session()->flash('error', 'Utilisateur non trouvé.');
+            return redirect()->back();
+        }
+    
+        // Dissocier l'utilisateur des cours
+        $utilisateur->cours()->detach();
+    
+        // Supprimer l'utilisateur
+        $utilisateur->delete();
+    
+        $request->session()->flash('etat', 'Utilisateur supprimé avec succès.');
+    
+        return redirect()->route('home');
+    }
+
+    public function deleteUserForm(Request $request, $id)
+{
+    $utilisateur = User::find($id);
+
+    if (!$utilisateur) {
+        $request->session()->flash('error', 'Utilisateur non trouvé.');
+        return redirect()->back();
+    }
+
+    return view("admin.deleteUser",["utilisateur" => $utilisateur]);
+}
+
+    
 
 
 }
