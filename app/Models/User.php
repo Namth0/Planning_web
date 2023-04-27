@@ -38,9 +38,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Cours::class, 'cours_users', 'user_id', 'cours_id');
     }
-    
 
-
+    public function coursEnseignant()
+{
+    return $this->belongsToMany(Cours::class, 'cours_users', 'user_id', 'cours_id');
+}
      function enseignants()
 {
     return $this->where('type', '=', 'enseignant')->get();

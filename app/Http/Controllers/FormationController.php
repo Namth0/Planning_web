@@ -225,17 +225,26 @@ public function deleteCours(Request $request, $id)
     return redirect()->route('home');
 }
 
-
-
-
-
-
-
 // Affiche la vue de suppression d'un cours
 public function deleteCoursForm($id){
     $cours = Cours::find($id);
     return view('admin.deleteCours') -> with('cours',$cours);
 }
-    
+//retourn la liste des enseignant avec leurs cours associés
+public function getCoursEnseignants(Request $request)
+{
+    $enseignants = User::where('type', 'enseignant')->with('coursEnseignant')->get();
+
+    if ($enseignants->isEmpty()) {
+        $request->session()->flash('error', 'Aucun enseignant trouvé.');
+        return redirect()->back();
+    }
+
+    $request->session()->flash('success', 'Liste des cours associés à tous les enseignants récupérée avec succès.');
+
+    return view('admin.listeCoursEnseignant')->with('enseignants', $enseignants);
+}
+
+
 
 }

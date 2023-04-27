@@ -66,6 +66,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/modifyCours/{id}', [FormationController::class,'modifyCours']);
     Route::get('/deleteCours/{id}', [FormationController::class, 'deleteCoursForm'])->name('deleteCours');
     Route::post('/deleteCours/{id}', [FormationController::class,'deleteCours']);
+    Route::get('/ProfAndCours/',[FormationController::class,'getCoursEnseignants'])->name('ProfAndCours');
 
 
 });

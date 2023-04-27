@@ -152,6 +152,7 @@
                 <a href="/cours">Cours</a>
                 <a href="/formation">Formations</a>
                 <a href="/rechercher">Rechercher cours</a>
+                <a href = "/ProfAndCours">Enseignant et cours</a>
                 @endif
                 <a href="/logout">Déconnexion</a>
             @endauth
