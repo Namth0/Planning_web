@@ -28,7 +28,8 @@
         }  
 </style>
 
-<h1 class ="my-5 border-bottom">Ajouter une formation</h1>
+<h1 class ="my-5 border-bottom">Ajouter un Cours</h1>
+<h4>! Attention a bien associer le prof apres avoir creer le cours ! </h4>
 
 <form method="post">   
         <label for="age">Intitulé du cours</label>

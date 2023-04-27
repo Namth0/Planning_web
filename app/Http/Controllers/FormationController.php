@@ -158,9 +158,84 @@ class FormationController extends Controller
             return back()->with('error', 'Vous n\'êtes pas inscrit à une formation.');
         }
     }
-    
-    
+
+    // fonction pour filtrer par intitule
+    public function rechercheParIntitule(Request $request)
+{
+    // Récupérer l'intitulé recherché depuis la requête
+    $intitule = $request->input('intitule');
+
+    // Effectuer la recherche dans la base de données
+    $resultats = Cours::where('intitule', 'like', '%' . $intitule . '%')->get();
+
+    // Retourner la vue avec les résultats de la recherche
+    return view('admin.rechercherAdmin', ['resultats' => $resultats]);
+}
+
+// modifier l'intitulé d'une formation
+public function modifyCours(Request $request,$id){
+
+    $validated = $request->validate([
+        'intitule'=> 'nullable|alpha_spaces|max:50',
+]);
+    $Cours = Cours::find($id);
+
+    if($Cours === null){
+        $request->session()->flash('error','Impossible de modifier le cours car inexistant');
+        return redirect()->route('/');
+    }
+
+    $Cours->intitule = $validated["intitule"];
+    $Cours->save();
+
+    $request->session()->flash('etat','Cours modifié avec succes !');
+    return redirect()->route('home');
+}
+
+public function modifyCoursForm(Request $request,$id){
+    $cours = Cours::find($id);
+
+    if($cours === null){
+        $request->session()->flash('error','Impossible de modifier le cours car inexistant');
+        return redirect()->route('cours');
+    }
+
+    return view('admin.modifyCours',["cours"=>$cours]);
+}
+
+public function deleteCours(Request $request, $id)
+{
+    $cours = Cours::find($id);
+
+    if ($cours === null) {
+        $request->session()->flash('error', 'Oops, Une erreur est survenue.');
+        return redirect()->route('cours');
+    }
+
+    // Supprimer les plannings associés au cours
+    $cours->plannings()->delete();
+
+    // Supprimer les relations cours-users associées au cours
+    $cours->users()->detach();
+
+    // Supprimer le cours lui-même
+    $cours->delete();
+
+    $request->session()->flash('etat', 'Cours supprimé.');
+    return redirect()->route('home');
+}
 
 
+
+
+
+
+
+// Affiche la vue de suppression d'un cours
+public function deleteCoursForm($id){
+    $cours = Cours::find($id);
+    return view('admin.deleteCours') -> with('cours',$cours);
+}
+    
 
 }

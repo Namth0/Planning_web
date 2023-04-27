@@ -20,6 +20,12 @@
             color: inherit;
         }
 
+        button
+        {
+            background : radial-gradient(black, black);
+            color: white;
+        }
+
 
         body
         {
@@ -90,12 +96,12 @@
         }
 
         header {
-         background-color: #080871;
+             background-color: #080871;
         }
 
         body {
-    background: radial-gradient(blue, grey);
-}
+            background: radial-gradient(blue, grey);
+        }
 
 
 
@@ -145,6 +151,7 @@
                 <a href="/addCours">Ajouter un cours</a>
                 <a href="/cours">Cours</a>
                 <a href="/formation">Formations</a>
+                <a href="/rechercher">Rechercher cours</a>
                 @endif
                 <a href="/logout">Déconnexion</a>
             @endauth

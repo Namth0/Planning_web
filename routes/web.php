@@ -60,6 +60,13 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/modifyFormation/{id}', [ActionController::class,'modifyFormations']);
     Route::get('/deleteFormation/{id}', [ActionController::class, 'suppForm'])->name('deleteFormation');
     Route::post('/deleteFormation/{id}', [ActionController::class,'deleteFormation']);
+    Route::post('/rechercher', [FormationController::class,'rechercheParIntitule']);
+    Route::get('/rechercher', [FormationController::class,'rechercheParIntitule'])->name('rechercher');
+    Route::get('/modifyCours/{id}', [FormationController::class, 'modifyCoursForm'])->name('modifyCours');
+    Route::post('/modifyCours/{id}', [FormationController::class,'modifyCours']);
+    Route::get('/deleteCours/{id}', [FormationController::class, 'deleteCoursForm'])->name('deleteCours');
+    Route::post('/deleteCours/{id}', [FormationController::class,'deleteCours']);
+
 
 });
 
