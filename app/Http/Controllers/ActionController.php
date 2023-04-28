@@ -12,6 +12,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class ActionController extends Controller
 {
@@ -317,23 +318,19 @@ return view('etudiant.ParCoursEtu', ['cours'=> $cours]);
 }
 public function listeCoursParSemaineEtu()
 {
-    $cours = Cours::whereHas('enseignants', function($query) {
-        $query->where('users.id', '=', Auth::user()->id);
+    $user_id = Auth::user()->id;
+    $plannings = Plannings::whereHas('cours.enseignants', function($query) use ($user_id) {
+        $query->where('users.id', '=', $user_id);
     })
-    ->with('planning')->get();
+    ->orderBy('date_debut')
+    ->get();
 
-    // Trier les cours par date croissante
-    $cours = $cours->sortBy(function ($cours) {
-        return optional($cours->planning)->date_debut;
-    });
-
-    // Regrouper les cours par semaine
-    $coursParSemaine = $cours->groupBy(function ($cours) {
-        return optional($cours->planning)->semaine;
+    $planningParSemaine = $plannings->groupBy(function ($planning) {
+        return date('W', strtotime($planning->date_debut));
     });
 
     // Retourner la vue avec les données des cours par semaine
-    return view('etudiant.ParSemaineEtu', ['coursParSemaine' => $coursParSemaine]);
+    return view('etudiant.ParSemaineEtu', ['coursParSemaine' => $planningParSemaine]);
 }
 
 
@@ -378,27 +375,25 @@ public function listeCoursResponsableParCours()
     return view('enseignant.ParCours', ['cours'=> $cours]);
 }
 
+
 public function listeCoursParSemaine()
 {
-    // Récupérer la liste des cours dont l'utilisateur est responsable
-    $cours = Cours::whereHas('enseignants', function($query) {
-        $query->where('users.id', '=', Auth::user()->id);
+    $user_id = Auth::user()->id;
+    $plannings = Plannings::whereHas('cours.enseignants', function($query) use ($user_id) {
+        $query->where('users.id', '=', $user_id);
     })
-    ->with('planning')->get();
+    ->orderBy('date_debut')
+    ->get();
 
-    // Trier les cours par date croissante
-    $cours = $cours->sortBy(function ($cours) {
-        return optional($cours->planning)->date_debut;
-    });
-
-    // Regrouper les cours par semaine
-    $coursParSemaine = $cours->groupBy(function ($cours) {
-        return optional($cours->planning)->semaine;
+    $planningParSemaine = $plannings->groupBy(function ($planning) {
+        return date('W', strtotime($planning->date_debut));
     });
 
     // Retourner la vue avec les données des cours par semaine
-    return view('enseignant.ParSemaine', ['coursParSemaine' => $coursParSemaine]);
+    return view('enseignant.ParSemaine', ['coursParSemaine' => $planningParSemaine]);
 }
+
+
 
 
 
@@ -407,7 +402,9 @@ public function creerSeanceCours(Request $request, $cours_id)
     // Validation des données de la requête
     $validated = $request->validate([
         'date_debut' => 'required|date',
-        'date_fin' => 'required|date|after:date_debut',
+        'heure_debut' => 'required',
+        'date_fin' => 'required|date',
+        'heure_fin' => 'required',
     ]);
 
     // Recherche du cours associé à l'ID fourni
@@ -416,11 +413,18 @@ public function creerSeanceCours(Request $request, $cours_id)
     // Création d'une nouvelle séance de cours pour ce cours
     $seance = new Plannings();
     $seance->cours_id = $cours->id;
-    $seance->date_debut = $validated['date_debut'];
-    $seance->date_fin = $validated['date_fin'];
+
+    // Combinaison de la date de début et de l'heure de début
+    $dateDebut = $validated['date_debut'] . ' ' . $validated['heure_debut'];
+    $seance->date_debut = $dateDebut;
+
+    // Combinaison de la date de fin et de l'heure de fin
+    $dateFin = $validated['date_fin'] . ' ' . $validated['heure_fin'];
+    $seance->date_fin = $dateFin;
+
     $seance->save();
 
-    $request->session()->flash('etat','Nouvelle séance créée !');
+    $request->session()->flash('etat', 'Nouvelle séance créée !');
 
     // Redirection vers la page du cours avec un message de confirmation
     return redirect()->route('home');
@@ -440,31 +444,39 @@ public function creerSeanceForm($cours_id)
 public function modifierSeanceCours(Request $request, $seance_id)
 {
     // Recherche de la séance de cours associée à l'ID fourni
-    $seance = Plannings::where('cours_id', $seance_id)->first();
-
+    $seance = Plannings::find($seance_id);
 
     // Vérification que la séance existe
     if (!$seance) {
-        $request->session()->flash('error','La séance n\'existe pas !');
+        $request->session()->flash('error', 'La séance n\'existe pas !');
         return redirect()->back();
     }
 
     // Validation des données de la requête
     $validated = $request->validate([
         'date_debut' => 'required|date',
-        'date_fin' => 'required|date|after:date_debut',
+        'heure_debut' => 'required',
+        'date_fin' => 'required|date',
+        'heure_fin' => 'required',
     ]);
 
+    // Combinaison de la date de début et de l'heure de début
+    $dateDebut = $validated['date_debut'] . ' ' . $validated['heure_debut'];
+
+    // Combinaison de la date de fin et de l'heure de fin
+    $dateFin = $validated['date_fin'] . ' ' . $validated['heure_fin'];
+
     // Mise à jour des informations de la séance de cours
-    $seance->date_debut = $validated['date_debut'];
-    $seance->date_fin = $validated['date_fin'];
+    $seance->date_debut = $dateDebut;
+    $seance->date_fin = $dateFin;
     $seance->save();
-    $request->session()->flash('etat','La séance a été modifiée !');
-  
+
+    $request->session()->flash('etat', 'La séance a été modifiée !');
 
     // Redirection vers la page du cours avec un message de confirmation
     return redirect()->route('home');
 }
+
 
 
 public function editerSeanceForm($seance_id)

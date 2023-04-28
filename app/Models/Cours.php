@@ -41,6 +41,11 @@ class Cours extends Model
         return $this->hasOne(Plannings::class);
     }
 
+    public function seances()
+{
+    return $this->hasMany(Seance::class);
+}
+
 
 public function semaine()
 {
