@@ -29,12 +29,14 @@ Route::view('/home','home');
 |--------------------------------------------------------------------------
 */
 Route::get('/register', [RegisterController::class,'formRegister'])
-    ->name('register');
-Route::post('/register', [RegisterController::class,'register']);
+    ->name('register')->middleware('throttle:global');
+Route::post('/register', [RegisterController::class,'register'])
+    ->middleware('throttle:global');
 
 Route::get('/login', [AuthenticatedSessionController::class,'showForm'])
-    ->name('login');
-Route::post('/login', [AuthenticatedSessionController::class,'login']);
+    ->name('login')->middleware('throttle:global');
+Route::post('/login', [AuthenticatedSessionController::class,'login'])
+    ->middleware('throttle:global');
 
 Route::get('/logout', [AuthenticatedSessionController::class,'logout'])
     ->name('logout')->middleware('auth');
@@ -44,7 +46,7 @@ Route::get('/logout', [AuthenticatedSessionController::class,'logout'])
 | Admin
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'is_admin'])->group(function () {
+Route::middleware(['throttle:global','auth', 'is_admin'])->group(function () {
     Route::post('/add', [FormationController::class, 'createFormations']);
     Route::get('/add', [FormationController::class, 'addFormationsForm'])->name('add');
     Route::get('/config', [FormationController::class, 'indexConfig'])->name('index')->name('config');
@@ -104,6 +106,8 @@ Route::get('/perSemaineEtu', [ActionController::class,'listeCoursParSemaineEtu']
 | Enseignant
 |--------------------------------------------------------------------------
 */
+
+Route::middleware(['auth', 'is_prof'])->group(function () {
 Route::get('/accountProf',[ActionController::class,'PasswordFormProf'])->name('accountProf');
 Route::post('/accountProf',[ActionController::class,'UpdatePasswordProf']);
 Route::get('/modify-nom-prenom',[ActionController::class,'nameFormProf'])->name('modify-nom-prenom');
@@ -119,4 +123,4 @@ Route::post('/deleteSeance/{id}', [ActionController::class,'supprimerSeanceCours
 Route::get('/perCours', [ActionController::class,'listeCoursResponsableParCours'])->name('perCours');
 Route::get('/perSemaine', [ActionController::class,'listeCoursParSemaine'])->name('perSemaine');
 
-
+});

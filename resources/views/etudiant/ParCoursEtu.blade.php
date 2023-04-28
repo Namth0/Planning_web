@@ -3,11 +3,16 @@
 @section('content')
 
 <h1>Liste des cours par Cours</h1>
+<form action="/perCoursEtu" method="GET">
+@csrf
+    <input type="text" name="search" placeholder="Rechercher par intitule">
+    <button type="submit">Rechercher</button>
+</form>
 
 <table class="table table-striped table-dark">
     <thead>
         <tr>
-            <th>Intitulé</th>
+            <th>Cours Inscrit</th>
             <th>Nombre d'étudiants/Enseignants inscrits</th>
              <th>Debut des cours</th>
             <th>Fin des cours</th>

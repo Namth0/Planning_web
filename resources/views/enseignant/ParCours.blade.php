@@ -3,6 +3,11 @@
 @section('content')
 
 <h1>les cours dont vous etes responsable par Cours</h1>
+<form action="/perCours" method="GET">
+@csrf
+    <input type="text" name="search" placeholder="Rechercher par intitule">
+    <button type="submit">Rechercher</button>
+</form>
 
 <table class="table table-striped table-dark">
     <thead>

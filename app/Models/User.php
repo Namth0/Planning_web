@@ -33,7 +33,12 @@ class User extends Authenticatable
     public function IsAdmin(){
          return $this->type == 'admin';
     }
-    
+
+    public function isProf()
+{
+    return $this->type === 'enseignant' || $this->type === 'admin';
+}
+
     public function cours()
     {
         return $this->belongsToMany(Cours::class, 'cours_users', 'user_id', 'cours_id');

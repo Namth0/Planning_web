@@ -304,14 +304,21 @@ public function listeCoursInscrits()
     return view('etudiant.ListeCoursInscritEtu', ["coursInscrits" => $coursInscrits]);
 }
 
-public function listeCoursEtudiantParCours(){
+public function listeCoursEtudiantParCours(Request $request){
     
-    $cours = Cours::whereHas('enseignants', function($query) {
+    $search = $request->query('search');
+
+    $query = Cours::whereHas('enseignants', function($query) {
         $query->where('users.id', '=', Auth::user()->id);
     })
-    ->with('plannings') // Chargement des plannings de chaque cours
-    ->orderBy('intitule')
-    ->get();
+    ->with('plannings')
+    ->orderBy('intitule');
+
+    if ($search) {
+        $query->where('intitule', 'LIKE', "%$search%");
+    }
+
+    $cours = $query->get();
 
 // Retourne la vue avec les cours
 return view('etudiant.ParCoursEtu', ['cours'=> $cours]);
@@ -361,19 +368,25 @@ public function listeCoursParSemaineEtu()
     return view('enseignant.listeCoursResponsable', ['cours' => $cours]);
 }
 
-public function listeCoursResponsableParCours()
+public function listeCoursResponsableParCours(Request $request)
 {
-    // Récupération des cours dont l'utilisateur connecté est responsable
-    $cours = Cours::whereHas('enseignants', function($query) {
-            $query->where('users.id', '=', Auth::user()->id);
-        })
-        ->with('plannings') // Chargement des plannings de chaque cours
-        ->orderBy('intitule')
-        ->get();
+    $search = $request->query('search');
 
-    // Retourne la vue avec les cours
-    return view('enseignant.ParCours', ['cours'=> $cours]);
+    $query = Cours::whereHas('enseignants', function($query) {
+        $query->where('users.id', '=', Auth::user()->id);
+    })
+    ->with('plannings')
+    ->orderBy('intitule');
+
+    if ($search) {
+        $query->where('intitule', 'LIKE', "%$search%");
+    }
+
+    $cours = $query->get();
+
+    return view('enseignant.ParCours', ['cours' => $cours]);
 }
+
 
 
 public function listeCoursParSemaine()
