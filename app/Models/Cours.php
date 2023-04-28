@@ -41,25 +41,16 @@ class Cours extends Model
         return $this->hasOne(Plannings::class);
     }
 
-    public function seances()
-{
-    return $this->hasMany(Seance::class);
-}
 
 
 public function semaine()
 {
-    // Vérifier s'il y a un planning associé au cours
+
     if ($this->planning) {
-        // Extraire la semaine à partir de la date de début du planning
         $dateDebut = $this->planning->date_debut;
         $semaine = $dateDebut->isoWeek();
-        
-        // Retourner le numéro de la semaine
         return $semaine;
     }
-    
-    // Retourner une valeur par défaut si aucun planning n'est associé
     return "N/A";
 }
 

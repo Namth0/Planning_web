@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    //
+    // renvoie la vue pour s'enregister
     public function formRegister(){
         $formations = Formations::all();
         return view('auth.register',["formations"=>$formations]);
         }
 
-        
+        // fonction pour s'enregister
         public function register(Request $request){
         $request->validate([
         'prenom' => 'required|string|max:50',
@@ -42,6 +42,7 @@ class RegisterController extends Controller
         return redirect("/home");
         }
 
+        // pour creer un utilisateur en tant qu'admin
     public function RegisterUserAdmin(Request $request){
         $request->validate([
             'prenom' => 'required|string|max:50',
@@ -63,6 +64,7 @@ class RegisterController extends Controller
             session()->flash('etat','formulaire rempli attente de verification !');
             return redirect("/home");
     }
+    //renvoie la vue pour creer un utilisateur en tant qu'admin
     public function formRegisterUser(){
         $formations = Formations::all();
         return view('admin.registerAdmin',["formations"=>$formations]);

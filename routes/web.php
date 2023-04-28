@@ -75,6 +75,9 @@ Route::middleware(['throttle:global','auth', 'is_admin'])->group(function () {
     Route::post('/modifyAll/{id}', [ActionController::class,'updateUser']);
     Route::get('/deleteUser/{id}', [ActionController::class, 'deleteUserForm'])->name('deleteUser');
     Route::post('/deleteUser/{id}', [ActionController::class,'deleteUser']);
+    Route::get('/gerer', [FormationController::class,'gererSeanceForm'])->name('gerer');
+    
+
 
 
 });

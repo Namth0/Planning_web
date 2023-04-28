@@ -6,7 +6,7 @@
 <form method="POST">
     @csrf
 
-    <!-- Champs pour la modification des données de l'utilisateur -->
+
     <label for="login">Login :</label>
     <input type="text" name="login" value="{{ $utilisateur->login }}" required>
 
@@ -23,7 +23,6 @@
         <option value="admin" @if ($utilisateur->type === 'admin') selected @endif>admin</option>
     </select>
 
-    <!-- Bouton de soumission -->
     <button type="submit">Modifier</button>
 </form>
 

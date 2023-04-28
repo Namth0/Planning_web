@@ -16,11 +16,12 @@ use Carbon\Carbon;
 
 class ActionController extends Controller
 {
-    //
+    //retourne la vue pour modifier un mdp
     public function PasswordFormEtu(Request $request){
         return view('etudiant.modifyPasswordEtu');
     }
 
+    //fonction pour modifier un mdp
     public function updatepasswordEtu(Request $request)
 {
     $user = Auth::user();
@@ -43,10 +44,12 @@ class ActionController extends Controller
     }
 }
 
+//retourne la vue pour modifier un mdp pour un prof
 public function PasswordFormProf(Request $request){
     return view('enseignant.modifyPasswordProf');
 }
 
+//fonction pour modifier un mdp pour un prof
 public function updatepasswordProf(Request $request)
 {
 $user = Auth::user();
@@ -69,6 +72,7 @@ if (Hash::check($currentPassword, $user->mdp)) {
 }
 }
 
+//fonction pour modifier le nom d'un prof
 public function modifyNameProf(Request $request){
     $user = Auth::user();
     $currentName = $request->input('Name');
@@ -124,6 +128,7 @@ public function modifyNameEtu(Request $request){
     return redirect()->route('home');
 }
 
+//fonction pour associer un prof a un cours
 public function associerProf(Request $request)
 {
     // Récupérer l'ID du cours à associer depuis le formulaire
@@ -151,6 +156,7 @@ public function associerProf(Request $request)
     return redirect()->route('home');
 }
 
+//vue pour associer un prof a un cours
 public function AssocierForm()
 {
     $cours = Cours::all();
@@ -192,7 +198,7 @@ public function modifyFormations(Request $request,$id){
     $request->session()->flash('etat','Formation modifié avec succes !');
     return redirect()->route('home');
 }
-
+//vue pour modifier l'intitule d'une formation
 public function modifyFormationsForm(Request $request,$id){
     $formation = Formations::find($id);
 
@@ -303,7 +309,7 @@ public function listeCoursInscrits()
     $coursInscrits = $user->cours;
     return view('etudiant.ListeCoursInscritEtu', ["coursInscrits" => $coursInscrits]);
 }
-
+//fonction pour faire les cours d'un etudiant avec barre de recherche
 public function listeCoursEtudiantParCours(Request $request){
     
     $search = $request->query('search');
@@ -320,7 +326,7 @@ public function listeCoursEtudiantParCours(Request $request){
 
     $cours = $query->get();
 
-// Retourne la vue avec les cours
+// Retourne la vue avec les cours avec barre de recher de cours
 return view('etudiant.ParCoursEtu', ['cours'=> $cours]);
 }
 public function listeCoursParSemaineEtu()
@@ -456,11 +462,11 @@ public function creerSeanceForm($cours_id)
 
 public function modifierSeanceCours(Request $request, $seance_id)
 {
+   
     // Recherche de la séance de cours associée à l'ID fourni
-    $seance = Plannings::find($seance_id);
-
-    // Vérification que la séance existe
-    if (!$seance) {
+    try {
+        $seance = Plannings::findOrFail($seance_id);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exception) {
         $request->session()->flash('error', 'La séance n\'existe pas !');
         return redirect()->back();
     }
@@ -468,20 +474,12 @@ public function modifierSeanceCours(Request $request, $seance_id)
     // Validation des données de la requête
     $validated = $request->validate([
         'date_debut' => 'required|date',
-        'heure_debut' => 'required',
         'date_fin' => 'required|date',
-        'heure_fin' => 'required',
     ]);
 
-    // Combinaison de la date de début et de l'heure de début
-    $dateDebut = $validated['date_debut'] . ' ' . $validated['heure_debut'];
-
-    // Combinaison de la date de fin et de l'heure de fin
-    $dateFin = $validated['date_fin'] . ' ' . $validated['heure_fin'];
-
     // Mise à jour des informations de la séance de cours
-    $seance->date_debut = $dateDebut;
-    $seance->date_fin = $dateFin;
+    $seance->date_debut = $validated['date_debut'] . ' ' . \Carbon\Carbon::parse($seance->date_debut)->format('H:i');
+    $seance->date_fin = $validated['date_fin'] . ' ' . \Carbon\Carbon::parse($seance->date_fin)->format('H:i');
     $seance->save();
 
     $request->session()->flash('etat', 'La séance a été modifiée !');
@@ -490,13 +488,10 @@ public function modifierSeanceCours(Request $request, $seance_id)
     return redirect()->route('home');
 }
 
-
-
 public function editerSeanceForm($seance_id)
 {
     // Récupération de la séance de cours associée à l'ID fourni
-    $seance = Plannings::where('cours_id', $seance_id)->first();
-
+    $seance = Plannings::findOrFail($seance_id);
     // Vérification que la séance existe
     if (!$seance) {
         // Séance inexistante, on redirige vers la page précédente avec un message d'erreur
@@ -629,8 +624,5 @@ public function UpdateUserForm(Request $request, $id){
 
     return view("admin.deleteUser",["utilisateur" => $utilisateur]);
 }
-
-    
-
 
 }

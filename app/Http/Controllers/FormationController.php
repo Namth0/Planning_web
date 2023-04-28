@@ -76,25 +76,6 @@ class FormationController extends Controller
         return view('admin.addCours', ["formations" => $formations, "enseignants" => $enseignants]);
     }
 
-    
-
-   
-//     public function indexConfig(Request $request)
-// {
-//     $type = $request->query('type'); // Récupérer la valeur du paramètre de requête 'type'
-
-//     // Filtrer les utilisateurs en fonction du type si le paramètre 'type' est présent
-//     if ($type === 'etudiant') {
-//         $usr = User::where('type', 'etudiant')->orderBy('created_at')->simplePaginate(10);
-//     } elseif ($type === 'enseignant') {
-//         $usr = User::where('type', 'enseignant')->orderBy('created_at')->simplePaginate(10);
-//     } else {
-//         // Afficher tous les utilisateurs si aucun type spécifié
-//         $usr = User::orderBy('created_at')->simplePaginate(10);
-//     }
-
-//     return view('admin.gestionUtilisateur', ['users' => $usr]);
-// }
 public function indexConfig(Request $request)
 {
     $type = $request->query('type'); // Récupérer la valeur du paramètre de requête 'type'
@@ -288,6 +269,37 @@ public function getCoursEnseignants(Request $request)
 
     return view('admin.listeCoursEnseignant')->with('enseignants', $enseignants);
 }
+
+public function gererSeanceForm(Request $request)
+{
+    $search = $request->query('search');
+
+    // Récupérer les enseignants avec leurs cours
+    $enseignants = User::where('type', 'enseignant')->with('cours')->get();
+
+    // Récupérer les cours avec les enseignants et les plannings associés
+    $query = Cours::with('enseignants', 'plannings')->orderBy('intitule');
+
+    if ($search) {
+        $query->where('intitule', 'LIKE', "%$search%");
+    }
+
+    $cours = $query->get();
+
+    if ($enseignants->isEmpty() && $cours->isEmpty()) {
+        $request->session()->flash('error', 'Aucun enseignant et aucun cours trouvé.');
+        return redirect()->back();
+    } elseif ($enseignants->isEmpty()) {
+        $request->session()->flash('error', 'Aucun enseignant trouvé.');
+    } elseif ($cours->isEmpty()) {
+        $request->session()->flash('error', 'Aucun cours trouvé.');
+    } else {
+
+    return view('admin.gerer', ['enseignants' => $enseignants, 'cours' => $cours]);
+}}
+
+
+
 
 
 

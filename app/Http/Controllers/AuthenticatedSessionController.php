@@ -9,12 +9,12 @@ use App\Models\Formations;
 
 class AuthenticatedSessionController extends Controller
 {
-    //
+    //affiche la vue du login
     public function showForm(){
         return view('auth.login');
     }
 
-    // login action
+    // fonction pour se login
     public function login(Request $request) {
         $request->validate([
             'login' => 'required|string',
@@ -27,11 +27,11 @@ class AuthenticatedSessionController extends Controller
         ];
     
         if (Auth::attempt($credentials)) {
-            $user = Auth::user(); // récupérer l'utilisateur authentifié
-            if(empty($user->type)) { // vérifier si le type d'utilisateur est nul ou vide
+            $user = Auth::user(); 
+            if(empty($user->type)) { 
                 Auth::logout(); // déconnecter l'utilisateur
                 $request->session()->flash('error', 'Un Admin verifie votre statut');
-                return redirect()->back(); // rediriger vers la page d'accueil
+                return redirect()->back(); 
             }
             $request->session()->regenerate();
             $request->session()->flash('etat', 'Login successful');

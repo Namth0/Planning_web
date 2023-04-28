@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use HasFactory;
-    // use SoftDeletes;
+   
    
 
     public $timestamps = false;

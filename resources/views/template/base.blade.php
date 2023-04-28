@@ -154,6 +154,7 @@
                 <a href="/rechercher">Rechercher cours</a>
                 <a href = "/ProfAndCours">Enseignant et cours</a>
                 <a href ="/creerUser">Creer user</a>
+                <a href="/gerer">Gestion planning</a>
                 @endif
                 <a href="/logout">Déconnexion</a>
             @endauth

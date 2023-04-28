@@ -43,7 +43,6 @@
         </tr>
     </thead>
     <tbody>
-        {{-- @foreach ($cours as $cour) --}}
             <tr>
                 <td>
                     <a href="/associer">
@@ -53,7 +52,6 @@
                     </a>
                 </td>
             </tr>
-        {{-- @endforeach --}}
     </tbody>
 </table>
 

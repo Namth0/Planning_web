@@ -27,7 +27,7 @@
         
     </style>
 
-   <h1 class="my-5 border-bottom">Inscription</h1>
+   <h1 class="my-5 border-bottom">Creer un utilisateur</h1>
    <ul class="my-5 border-bottom">Pour une inscription admin ou enseignant ne pas remplir le champ formation et remplir en + le choix du type, pour un etudiant remplir le form sans le choix du type merci .</ul>
 
 <form method="post">
