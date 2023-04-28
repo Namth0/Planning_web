@@ -78,14 +78,53 @@ class FormationController extends Controller
 
     
 
-    // retourne la vue de configuration
-    public function indexConfig()
-    {
-        $usr = User::orderBy('created_at')->simplePaginate(10);
-      
-        
-        return view('admin.gestionUtilisateur', ['users' => $usr]);
+   
+//     public function indexConfig(Request $request)
+// {
+//     $type = $request->query('type'); // Récupérer la valeur du paramètre de requête 'type'
+
+//     // Filtrer les utilisateurs en fonction du type si le paramètre 'type' est présent
+//     if ($type === 'etudiant') {
+//         $usr = User::where('type', 'etudiant')->orderBy('created_at')->simplePaginate(10);
+//     } elseif ($type === 'enseignant') {
+//         $usr = User::where('type', 'enseignant')->orderBy('created_at')->simplePaginate(10);
+//     } else {
+//         // Afficher tous les utilisateurs si aucun type spécifié
+//         $usr = User::orderBy('created_at')->simplePaginate(10);
+//     }
+
+//     return view('admin.gestionUtilisateur', ['users' => $usr]);
+// }
+public function indexConfig(Request $request)
+{
+    $type = $request->query('type'); // Récupérer la valeur du paramètre de requête 'type'
+    $search = $request->query('search'); // Récupérer la valeur du paramètre de requête 'search'
+
+    $query = User::query();
+
+    // Filtrer les utilisateurs en fonction du type si le paramètre 'type' est présent
+    if ($type === 'etudiant') {
+        $query->where('type', 'etudiant');
+    } elseif ($type === 'enseignant') {
+        $query->where('type', 'enseignant');
     }
+
+    // Effectuer la recherche par nom/prénom/login si le paramètre 'search' est présent
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('nom', 'LIKE', "%$search%")
+                ->orWhere('prenom', 'LIKE', "%$search%")
+                ->orWhere('login', 'LIKE', "%$search%");
+        });
+    }
+
+    // Récupérer les utilisateurs paginés en utilisant la requête construite
+    $usr = $query->orderBy('created_at')->simplePaginate(10);
+
+    return view('admin.gestionUtilisateur', ['users' => $usr]);
+}
+
+
 
     public function modifyType(Request $request, $id){
         $user = Auth::user();
