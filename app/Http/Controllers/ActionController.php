@@ -407,11 +407,9 @@ public function listeCoursParSemaine()
     $planningParSemaine = $plannings->groupBy(function ($planning) {
         return date('W', strtotime($planning->date_debut));
     });
-
-    // Retourner la vue avec les données des cours par semaine
+    
     return view('enseignant.ParSemaine', ['coursParSemaine' => $planningParSemaine]);
 }
-
 
 
 
@@ -506,7 +504,8 @@ public function editerSeanceForm($seance_id)
 public function supprimerSeanceForm($seance_id)
 {
     // Récupération de la séance de cours associée à l'ID fourni
-    $seance = Plannings::where('cours_id', $seance_id)->first();
+    // $seance = Plannings::where('cours_id', $seance_id)->first();
+    $seance = Plannings::findOrFail($seance_id);
 
     // Vérification que la séance existe
     if (!$seance) {
@@ -522,8 +521,8 @@ public function supprimerSeanceForm($seance_id)
 public function supprimerSeanceCours(Request $request, $seance_id)
 {
     // Recherche de la séance de cours associée à l'ID fourni
-    $seance = Plannings::where('cours_id', $seance_id)->first();
-
+    // $seance = Plannings::where('cours_id', $seance_id)->first();
+    $seance = Plannings::findOrFail($seance_id);
     // Vérification que la séance existe
     if (!$seance) {
         $request->session()->flash('error','Séance inexistante !');

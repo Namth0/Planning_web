@@ -22,28 +22,24 @@
             <tbody>
                 @foreach($plannings as $index => $planning)
                     <tr>
-                        @if($index === 0)
-                            <td rowspan="{{ count($plannings) }}">{{ date('d/m/Y', strtotime($planning->date_debut)) }}</td>
-                            <td rowspan="{{ count($plannings) }}">{{ date('d/m/Y', strtotime($planning->date_fin)) }}</td>
-                        @endif
+                        <td>{{ date('d/m/Y', strtotime($planning->date_debut)) }}</td>
+                        <td>{{ date('d/m/Y', strtotime($planning->date_fin)) }}</td>
                         <td>{{ date('H:i', strtotime($planning->date_debut)) }}</td>
                         <td>{{ date('H:i', strtotime($planning->date_fin)) }}</td>
-                        @if($index === 0)
-                            <td rowspan="{{ count($plannings) }}">
-                                @if($planning->cours && $planning->cours->intitule)
-                                    {{ $planning->cours->intitule }}
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                            <td rowspan="{{ count($plannings) }}">
-                                @if($planning->cours && $planning->cours->formation && $planning->cours->formation->intitule)
-                                    {{ $planning->cours->formation->intitule }}
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                        @endif
+                        <td>
+                            @if($planning->cours && $planning->cours->intitule)
+                                {{ $planning->cours->intitule }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
+                        <td>
+                            @if($planning->cours && $planning->cours->formation && $planning->cours->formation->intitule)
+                                {{ $planning->cours->formation->intitule }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
