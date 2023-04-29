@@ -20,10 +20,51 @@
             color: inherit;
         }
 
-        button
-        {
-            background : radial-gradient(black, black);
-            color: white;
+       input[type="text"],
+button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  background-color: #f2f2f2;
+}
+
+input[type="text"] {
+  width: 200px;
+  border: 1px solid #ccc;
+}
+
+button {
+  color: white;
+  background-color: #337ab7;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #135b9e;
+}
+select {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f2f2f2;
+  width: 200px;
+}
+
+select:hover {
+  border-color: #999;
+}
+
+select:focus {
+  outline: none;
+  border-color: #337ab7;
+  box-shadow: 0 0 5px rgba(51, 122, 183, 0.5);
+}
+
+
+        a.btn.btn-primary{
+            color : #080871;
         }
 
 
@@ -86,6 +127,59 @@
             width: 100%;
         }
 
+        h1 {
+            color : #080871;
+        }
+        h2 {
+            color : #080871;
+        }
+
+        h4 {
+            color : #080871;
+        }
+        
+        
+        legend {
+            color : #080871;
+        }
+
+        .table-container {
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th,
+td {
+  padding: 10px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+th:first-child,
+td:first-child {
+  border-top-left-radius: 10px;
+}
+
+th:last-child,
+td:last-child {
+  border-top-right-radius: 10px;
+}
+
+tr:last-child td:first-child,
+tr:last-child td:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+
 
         main
         {
@@ -103,8 +197,27 @@
             background: radial-gradient(blue, grey);
         }
 
+        /* Ajoute ce style dans ton fichier CSS */
 
+    h1.my-5.border-bottom {
+       
+        color : #080871;
+        border-bottom: 2px solid black;
+        }
+    ul.my-5.border-bottom {
+        color : #080871;
+    }
 
+        p.my-5 {
+            
+            color : #080871;
+            font-size: 18px;
+        }
+        p{
+            
+            color : #080871;
+            font-size: 18px
+        }
         .bubble
         {
             position: absolute;
@@ -114,6 +227,40 @@
             height: auto;
             padding: 1rem;
         }
+
+
+
+        .titre {
+  margin-bottom: 20px;
+}
+
+.form-recherche {
+  margin-bottom: 20px;
+}
+
+.input-recherche {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.btn-recherche {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #337ab7;
+  color: white;
+  border: none;
+}
+
+.btn-group {
+  margin-top: 20px;
+}
+
+.btn-group .btn {
+  margin-right: 10px;
+}
+
+
         
     </style>
 
@@ -147,8 +294,8 @@
                 @endif
                 @if(Auth::user()->type == "admin")
                 <a href="/config">Configuration</a>
-                <a href="/add">Ajouter une formation</a>
-                <a href="/addCours">Ajouter un cours</a>
+                <a href="/add">Ajouter formation</a>
+                <a href="/addCours">Ajouter cours</a>
                 <a href="/cours">Cours</a>
                 <a href="/formation">Formations</a>
                 <a href="/rechercher">Rechercher cours</a>

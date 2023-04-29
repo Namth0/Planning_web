@@ -24,13 +24,14 @@
             @endforeach
         </tbody>
     </table>
-
+<h2>Tout les cours </h2>
     <form action="/gerer" method="GET">
         @csrf
         <input type="text" name="search" placeholder="Rechercher par intitulé">
         <button type="submit">Rechercher</button>
     </form>
 
+    
     <table class="table table-striped table-dark">
         <thead>
             <tr>

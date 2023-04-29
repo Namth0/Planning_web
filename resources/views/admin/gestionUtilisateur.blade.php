@@ -1,19 +1,20 @@
 @extends('template/base')
 
 @section('content')
-<h1>Liste des Utilisateurs</h1>
-<form action="/config" method="GET">
-@csrf
-    <input type="text" name="search" placeholder="Rechercher par nom/prénom/login">
-    <button type="submit">Rechercher</button>
-</form>
+<h1 class="titre">Liste des Utilisateurs</h1>
 
+<form action="/config" method="GET" class="form-recherche">
+    @csrf
+    <input type="text" name="search" placeholder="Rechercher par nom/prénom/login" class="input-recherche">
+    <button type="submit" class="btn-recherche">Rechercher</button>
+</form>
 
 <div class="btn-group" role="group" aria-label="Filtrer par type">
     <a href="/config" class="btn btn-primary">Tous</a>
     <a href="/config?type=etudiant" class="btn btn-primary">Étudiants</a>
     <a href="/config?type=enseignant" class="btn btn-primary">Enseignants</a>
 </div>
+
 
     
 <table class ="table table-striped table-dark">

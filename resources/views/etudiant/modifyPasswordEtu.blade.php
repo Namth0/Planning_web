@@ -25,8 +25,16 @@
             width: 5rem;
             margin-right: 1rem;
         }
+
+        ul {
+  font-weight: bold;
+}
+
         
     </style>
+    <ul>!!! N'oublie de voir en bas pour pouvoir modifier le Nom et Prenom !!! </ul>
+
+
     <h1 class="my-5 border-bottom">Modification mots de passe Etudiant</h1>
 
     <form method="post">
