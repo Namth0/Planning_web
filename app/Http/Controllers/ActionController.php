@@ -13,6 +13,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use DB;
 
 class ActionController extends Controller
 {
@@ -211,18 +212,59 @@ public function modifyFormationsForm(Request $request,$id){
 }
 
 //fonction qui suprrime une formation 
-public function deleteFormation(Request $request, $id) {
+// public function deleteFormation(Request $request, $id) {
 
-    $formation = Formations::find($id);
+//     // $formation = Formations::find($id);
 
-    if ($formation === null) {
-        $request->session()->flash('error', 'Oops, Une erreur est survenue.');
-        return redirect()->route('formation');
-    }
+//     // if ($formation === null) {
+//     //     $request->session()->flash('error', 'Oops, Une erreur est survenue.');
+//     //     return redirect()->route('formation');
+//     // }
     
-    $formation->delete();
-    $request->session()->flash('etat', 'Formation supprimé.');
-    return redirect()->route('home');
+//     // $formation->delete();
+//     // $request->session()->flash('etat', 'Formation supprimé.');
+
+    public function deleteFormation(Request $request, $id) {
+        
+    
+        // on récupère la formation
+        $formation = Formations::find($id);
+    
+        // on récupère les utilisateurs de la formation
+        $users = User::where('formation_id', $formation->id)->get();
+    
+        // on supprime les utilisateurs
+        foreach($users as $user){
+            // on supprime les cours où les utilisateurs sont inscrits
+            $cours = $user->cours()->get();
+            foreach ($cours as $cour) {
+                // on supprime les plannings de ces cours
+                $cour->plannings()->delete();
+    
+                // on supprime les relations entre les cours et les utilisateurs
+                $cour->users()->detach($user->id);
+    
+                // on supprime les cours
+                $cour->delete();
+            }
+            // on supprime les utilisateurs
+            $user->delete();
+        }
+    
+        // on récupère les cours de la formation
+        $cours = Cours::where('formation_id', $formation->id)->get();
+                // on supprime les cours et on met à jour les champs formation_id
+                foreach ($cours as $cour) {
+                    DB::table('cours_users')->where('cours_id', $cour->id)->delete();
+                    $cour->plannings()->delete();
+                    $cour->formation_id = null;
+                    $cour->save();
+                }
+        
+            $formation->delete();
+            
+            $request->session()->flash('etat', 'Formation supprimée.');
+            return redirect()->route('home');
 }
 
 // Affiche la vue de suppression d'une personne
