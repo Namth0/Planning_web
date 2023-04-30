@@ -32,7 +32,7 @@
 
         
     </style>
-    <ul>!!! N'oublie de voir en bas pour pouvoir modifier le Nom et Prenom !!! </ul>
+    <h4>!!! N'oublie de voir en bas pour pouvoir modifier le Nom et Prenom !!! </h4>
 
 
     <h1 class="my-5 border-bottom">Modification mots de passe Etudiant</h1>

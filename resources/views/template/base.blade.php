@@ -186,7 +186,7 @@ tr:last-child td:last-child {
             min-height: calc(100vh - 75px);
             width: min(90%, 1000px);
             margin-inline: auto;
-            background-color: radial-gradient(red, blue);
+            
         }
 
         header {
@@ -194,7 +194,7 @@ tr:last-child td:last-child {
         }
 
         body {
-            background: radial-gradient(blue, grey);
+            background: linear-gradient(to top, #ffffff 0%, #0d6efd 100%);
         }
 
         /* Ajoute ce style dans ton fichier CSS */
